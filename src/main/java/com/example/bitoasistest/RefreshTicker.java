@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.*;
+
 
 @Component
 public class RefreshTicker {
@@ -22,6 +24,7 @@ public class RefreshTicker {
 
     @Async
     @Scheduled(fixedRate = 10000)
+    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.DEFAULT)
     public void reportCurrentTime() throws InterruptedException {
         try {
             Ticker tickerData = tickerClient.fetchTickerData();
