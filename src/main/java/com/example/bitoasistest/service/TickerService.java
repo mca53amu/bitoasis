@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -22,18 +23,20 @@ public class TickerService {
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRED ,isolation = Isolation.READ_COMMITTED)
     public Page<Ticker> getTickers(int pageNo, int pageSize) {
         log.debug("Received request page {} -- size {}", pageNo, pageSize);
         return tickerRepository.findAll(PageRequest.of(pageNo, pageSize));
     }
 
+    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.REPEATABLE_READ)
     public Ticker update(Ticker ticker) throws Exception {
         log.debug("Received request ticker {}", ticker);
         Optional<Ticker> byId = tickerRepository.findById(ticker.getId());
         Ticker updateTicker = byId.orElseThrow(() -> new Exception(NOT_FOUND));
         copyValues(ticker, updateTicker);
-        tickerRepository.save(updateTicker);
-        return updateTicker;
+        Ticker save = tickerRepository.save(updateTicker);
+        return save;
     }
 
     private void copyValues(Ticker ticker, Ticker updateTicker) {
@@ -48,6 +51,7 @@ public class TickerService {
         updateTicker.setVolume(ticker.getVolume());
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     public Ticker delete(Long id) throws Exception {
         log.debug("Received request ticker id {}", id);
         Optional<Ticker> byId = tickerRepository.findById(id);
@@ -56,6 +60,7 @@ public class TickerService {
         return ticker;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     public void deleteAll() throws Exception {
         log.debug("Received request delete all");
         tickerRepository.deleteAll();

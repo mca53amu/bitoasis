@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Table(name = "ticker")
 public class Ticker {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_SEQUENCE")
+    @GeneratedValue
     private Long id;
     @Column(name = "bid")
     private BigDecimal bid;

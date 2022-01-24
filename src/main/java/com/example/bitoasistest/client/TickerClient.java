@@ -23,7 +23,7 @@ public class TickerClient {
         this.restTemplate = restTemplate;
     }
 
-    public Ticker fetchTickerData() {
+    public Ticker fetchTickerData() throws Exception {
         ResponseEntity<List<BigDecimal>> tickerResponse =
                 restTemplate.exchange(url,
                         HttpMethod.GET, null, new ParameterizedTypeReference<List<BigDecimal>>() {

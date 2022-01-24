@@ -20,7 +20,7 @@ public class TickerController {
         this.tickerService = tickerService;
     }
 
-    @GetMapping(value = {"/"})
+    @GetMapping
     public List<Ticker> getTickers(
             @RequestParam(value = "page", required = false, defaultValue = "1") int currentPage,
             @RequestParam(value = "size", required = false, defaultValue = "10") int pageSize
@@ -30,7 +30,7 @@ public class TickerController {
         return tickers.getContent();
     }
 
-    @PutMapping("/")
+    @PutMapping
     public Ticker update(@RequestBody Ticker ticker) throws Exception {
         log.debug("Received request ticker {}", ticker);
         return tickerService.update(ticker);
@@ -42,7 +42,7 @@ public class TickerController {
         return tickerService.delete(id);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public void deleteAll() throws Exception {
         log.debug("Received request delete all");
         tickerService.deleteAll();
